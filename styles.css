@@ -2080,3 +2080,509 @@ input:checked + .slider .h24 {
         font-size: 13px;
     }
 }
+
+/* Time Card Timezone Styles */
+.timezone-info,
+.timezone-offset {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-light-secondary);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    margin-top: 8px;
+}
+
+.timezone-info i,
+.timezone-offset i {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.timezone-info {
+    margin-right: auto;
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1024px) {
+    .timezone-info,
+    .timezone-offset {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    .timezone-info i,
+    .timezone-offset i {
+        font-size: 16px;
+    }
+}
+
+/* Theme-specific styles */
+[data-theme="dark"] .timezone-info,
+[data-theme="dark"] .timezone-offset {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="halloween"] .timezone-info,
+[data-theme="halloween"] .timezone-offset {
+    background: rgba(255, 165, 0, 0.1);
+}
+
+[data-theme="christmas"] .timezone-info,
+[data-theme="christmas"] .timezone-offset {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="july4th"] .timezone-info,
+[data-theme="july4th"] .timezone-offset {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Add these animation keyframes */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+}
+
+/* Enhanced Search Card */
+.search-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.search-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.search-card:hover::after {
+    left: 100%;
+}
+
+.search-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.search-button i {
+    animation: float 2s infinite ease-in-out;
+}
+
+/* Enhanced Settings Button */
+.settings-button {
+    transition: all 0.3s ease;
+}
+
+.settings-button:hover i {
+    animation: spin 1s linear infinite;
+}
+
+/* Enhanced Weather Icons */
+.weather-icon {
+    transition: all 0.3s ease;
+}
+
+.weather-icon:hover {
+    animation: pulse 1s infinite ease-in-out;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+/* Enhanced Weather Details */
+.weather-detail-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.weather-detail-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, 
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.weather-detail-item:hover::before {
+    opacity: 1;
+}
+
+.weather-detail-item i {
+    transition: all 0.3s ease;
+}
+
+.weather-detail-item:hover i {
+    transform: scale(1.2);
+    animation: glow 2s infinite;
+}
+
+/* Enhanced Temperature Display */
+.temperature {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.temperature:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Enhanced Toggle Switches */
+.switch {
+    position: relative;
+    cursor: pointer;
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+}
+
+.slider::before {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switch:hover .slider::before {
+    box-shadow: 0 0 10px rgba(24, 119, 242, 0.5);
+}
+
+/* Enhanced Radio Options */
+.radio-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.radio-label {
+    transition: all 0.3s ease;
+}
+
+.radio-label:hover {
+    transform: translateY(-2px);
+}
+
+.radio-label i {
+    transition: all 0.3s ease;
+}
+
+.radio-option:hover .radio-label i {
+    animation: float 2s infinite ease-in-out;
+}
+
+/* Interactive Feedback */
+.search-input-group input:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Settings Modal Enhancement */
+.settings-modal .settings-content {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-modal.visible .settings-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Enhanced Theme Select */
+.settings-select {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-select:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading Animation Enhancement */
+.spinner {
+    position: relative;
+}
+
+.spinner::before,
+.spinner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+}
+
+.spinner::after {
+    width: 80%;
+    height: 80%;
+    border-top-color: rgba(255, 255, 255, 0.5);
+    animation-duration: 0.5s;
+    animation-direction: reverse;
+}
+
+/* Card Hover Effects */
+.card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Interactive Icons */
+.fas, .fab {
+    transition: all 0.3s ease;
+}
+
+.fas:hover, .fab:hover {
+    transform: scale(1.2);
+    color: var(--accent);
+}
+
+/* Status Indicators */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4CAF50;
+    display: inline-block;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+/* Add smooth transitions for theme changes */
+:root {
+    transition: all 0.3s ease;
+}
+
+/* Add loading shimmer effect */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.loading {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.1)
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Responsive hover effects */
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .weather-detail-item:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* New Theme Variables */
+[data-theme="ocean"] {
+    --background: #e0f7fa;
+    --surface: #ffffff;
+    --text: #01579b;
+    --text-secondary: #0277bd;
+    --accent: #00838f;
+    --error: #d32f2f;
+    --card-shadow: 0 2px 12px rgba(0, 131, 143, 0.1);
+    --gradient-blue: linear-gradient(135deg, #006064, #00acc1);
+    --gradient-pink: linear-gradient(135deg, #00838f, #4dd0e1);
+    --gradient-sunset: linear-gradient(135deg, #00acc1, #26c6da);
+}
+
+[data-theme="forest"] {
+    --background: #e8f5e9;
+    --surface: #ffffff;
+    --text: #1b5e20;
+    --text-secondary: #2e7d32;
+    --accent: #388e3c;
+    --error: #c62828;
+    --card-shadow: 0 2px 12px rgba(56, 142, 60, 0.1);
+    --gradient-blue: linear-gradient(135deg, #1b5e20, #43a047);
+    --gradient-pink: linear-gradient(135deg, #2e7d32, #66bb6a);
+    --gradient-sunset: linear-gradient(135deg, #388e3c, #81c784);
+}
+
+[data-theme="desert"] {
+    --background: #fff3e0;
+    --surface: #ffffff;
+    --text: #bf360c;
+    --text-secondary: #e65100;
+    --accent: #ff6f00;
+    --error: #dd2c00;
+    --card-shadow: 0 2px 12px rgba(255, 111, 0, 0.1);
+    --gradient-blue: linear-gradient(135deg, #ff6f00, #ffa000);
+    --gradient-pink: linear-gradient(135deg, #f57c00, #ffb74d);
+    --gradient-sunset: linear-gradient(135deg, #ff8f00, #ffd180);
+}
+
+[data-theme="night"] {
+    --background: #1a237e;
+    --surface: #283593;
+    --text: #e8eaf6;
+    --text-secondary: #c5cae9;
+    --accent: #5c6bc0;
+    --error: #ef5350;
+    --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    --gradient-blue: linear-gradient(135deg, #1a237e, #3949ab);
+    --gradient-pink: linear-gradient(135deg, #283593, #5c6bc0);
+    --gradient-sunset: linear-gradient(135deg, #303f9f, #7986cb);
+}
+
+/* Theme-specific card styles */
+[data-theme="ocean"] .weather-card,
+[data-theme="ocean"] .time-card {
+    background: var(--gradient-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="ocean"] .weather-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="rgba(255,255,255,0.1)" d="M0 50 Q 25 60, 50 50 T 100 50 T 150 50" transform="translate(0,0)"><animate attributeName="d" dur="5s" repeatCount="indefinite" values="M0 50 Q 25 60, 50 50 T 100 50 T 150 50;M0 50 Q 25 40, 50 50 T 100 50 T 150 50;M0 50 Q 25 60, 50 50 T 100 50 T 150 50"/></path></svg>');
+    animation: wave 10s linear infinite;
+    opacity: 0.5;
+}
+
+[data-theme="forest"] .weather-card::before {
+    content: '🌿';
+    position: absolute;
+    font-size: 100px;
+    opacity: 0.1;
+    right: -20px;
+    bottom: -20px;
+    transform: rotate(-15deg);
+}
+
+[data-theme="desert"] .weather-card {
+    background: var(--gradient-sunset);
+}
+
+[data-theme="desert"] .weather-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path fill="rgba(255,255,255,0.1)" d="M0 40 L80 40 L40 0 Z"/></svg>');
+    background-size: 20px 20px;
+    opacity: 0.1;
+}
+
+[data-theme="night"] .weather-card,
+[data-theme="night"] .time-card {
+    background: var(--gradient-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="night"] .weather-card::before,
+[data-theme="night"] .time-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(1px 1px at 20px 30px, white, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 40px 70px, white, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 50px 160px, white, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 80px 120px, white, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 110px 50px, white, rgba(0,0,0,0));
+    background-repeat: repeat;
+    animation: twinkle 4s infinite;
+    opacity: 0.3;
+}
+
+/* Theme animations */
+@keyframes wave {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 0; }
+}
+
+/* Update existing theme-specific styles to include new themes */
+[data-theme="ocean"] .weather-detail-item,
+[data-theme="forest"] .weather-detail-item,
+[data-theme="desert"] .weather-detail-item,
+[data-theme="night"] .weather-detail-item {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Theme-specific hover effects */
+[data-theme="ocean"] .card:hover {
+    box-shadow: 0 8px 25px rgba(0, 131, 143, 0.2);
+}
+
+[data-theme="forest"] .card:hover {
+    box-shadow: 0 8px 25px rgba(56, 142, 60, 0.2);
+}
+
+[data-theme="desert"] .card:hover {
+    box-shadow: 0 8px 25px rgba(255, 111, 0, 0.2);
+}
+
+[data-theme="night"] .card:hover {
+    box-shadow: 0 8px 25px rgba(92, 107, 192, 0.3);
+}
