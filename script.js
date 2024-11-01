@@ -1,4 +1,3 @@
-
 // Configuration
 const CONFIG = {
     WEATHER_API_KEY: 'b1ed402df4814dc2b3f180428243110', // Replace with your WeatherAPI.com key
@@ -690,20 +689,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.setAttribute('data-theme', savedTheme);
 
     // Settings modal handlers
-    settingsButton.addEventListener('click', () => {
-        settingsModal.style.display = 'block';
-    });
+    if (settingsButton && settingsModal && closeSettings) {
+        settingsButton.addEventListener('click', () => {
+            settingsModal.style.display = 'block';
+            // Add visible class for animation
+            setTimeout(() => {
+                settingsModal.classList.add('visible');
+            }, 10);
+        });
 
-    closeSettings.addEventListener('click', () => {
-        settingsModal.style.display = 'none';
-    });
+        closeSettings.addEventListener('click', () => {
+            settingsModal.classList.remove('visible');
+            setTimeout(() => {
+                settingsModal.style.display = 'none';
+            }, 300);
+        });
 
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target === settingsModal) {
-            settingsModal.style.display = 'none';
-        }
-    });
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('visible');
+                setTimeout(() => {
+                    settingsModal.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && settingsModal.style.display === 'block') {
+                settingsModal.classList.remove('visible');
+                setTimeout(() => {
+                    settingsModal.style.display = 'none';
+                }, 300);
+            }
+        });
+    }
 
     // Theme change handler
     themeSelect.addEventListener('change', (e) => {
@@ -725,13 +746,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('clockFormat', is24Hour ? '24h' : '12h');
         if (window.currentTimezone) {
             updateLocalClock(window.currentTimezone);
-        }
-    });
-
-    // Close modal on escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && settingsModal.style.display === 'block') {
-            settingsModal.style.display = 'none';
         }
     });
 
