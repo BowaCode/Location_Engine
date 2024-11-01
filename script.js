@@ -20,15 +20,20 @@ const CARDS_TEMPLATE = `
     <div class="card weather-card">
         <div class="weather-main">
             <img id="weatherIcon" class="weather-icon" src="" alt="Weather">
-            <div class="temperature">
-                <span id="temperature"></span>
-                <span class="temp-unit">°C</span>
+            <div class="weather-info">
+                <div class="temperature">
+                    <span id="temperature"></span>
+                    <span class="temp-unit">°C</span>
+                </div>
+                <div id="weather" class="weather-condition"></div>
+                <div class="feels-like">
+                    Feels like <span id="feelsLike">--</span>
+                </div>
             </div>
-            <div id="weather" class="weather-condition"></div>
         </div>
         <div class="weather-details">
             <div class="weather-detail-item">
-                <i class="fas fa-droplet-degree"></i>
+                <i class="fas fa-droplet"></i>
                 <div class="detail-info">
                     <span class="detail-label">Humidity</span>
                     <span class="detail-value" id="humidity">--</span>
@@ -39,6 +44,34 @@ const CARDS_TEMPLATE = `
                 <div class="detail-info">
                     <span class="detail-label">Wind Speed</span>
                     <span class="detail-value" id="windSpeed">--</span>
+                </div>
+            </div>
+            <div class="weather-detail-item">
+                <i class="fas fa-compass"></i>
+                <div class="detail-info">
+                    <span class="detail-label">Wind Direction</span>
+                    <span class="detail-value" id="windDirection">--</span>
+                </div>
+            </div>
+            <div class="weather-detail-item">
+                <i class="fas fa-gauge-high"></i>
+                <div class="detail-info">
+                    <span class="detail-label">Pressure</span>
+                    <span class="detail-value" id="pressure">--</span>
+                </div>
+            </div>
+            <div class="weather-detail-item">
+                <i class="fas fa-sun"></i>
+                <div class="detail-info">
+                    <span class="detail-label">UV Index</span>
+                    <span class="detail-value" id="uvIndex">--</span>
+                </div>
+            </div>
+            <div class="weather-detail-item">
+                <i class="fas fa-cloud-rain"></i>
+                <div class="detail-info">
+                    <span class="detail-label">Precipitation</span>
+                    <span class="detail-value" id="precipitation">--</span>
                 </div>
             </div>
         </div>
@@ -222,6 +255,7 @@ const MAP_CONFIG = {
 // Add this variable at the top with other globals
 let isFahrenheit = false;
 let is24Hour = false;
+let isAdvancedWeather = false;
 
 // Add these constants for theme management
 const HOLIDAY_THEMES = {
@@ -340,6 +374,7 @@ async function searchLocation() {
 function restoreCardsTemplate() {
     const cardsContainer = document.querySelector('.cards-container');
     cardsContainer.innerHTML = CARDS_TEMPLATE;
+    updateWeatherDisplay();
 }
 
 // UI Updates
@@ -358,11 +393,17 @@ function updateWeatherUI(data) {
         }
     }
 
-    // Update weather information
+    // Update weather information with expanded details
     const weatherIcon = document.getElementById('weatherIcon');
     const temperature = document.getElementById('temperature');
     const weather = document.getElementById('weather');
+    const humidity = document.getElementById('humidity');
+    const windSpeed = document.getElementById('windSpeed');
+    const windDirection = document.getElementById('windDirection');
+    const pressure = document.getElementById('pressure');
     const feelsLike = document.getElementById('feelsLike');
+    const uvIndex = document.getElementById('uvIndex');
+    const precipitation = document.getElementById('precipitation');
 
     if (weatherIcon && temperature && weather) {
         weatherIcon.src = `https:${data.current.condition.icon}`;
@@ -389,14 +430,13 @@ function updateWeatherUI(data) {
         }
     }
 
-    // Update additional weather details if they exist
-    const humidity = document.getElementById('humidity');
-    const windSpeed = document.getElementById('windSpeed');
-    const windDirection = document.getElementById('windDirection');
-
+    // Update all weather details
     if (humidity) humidity.textContent = `${data.current.humidity}%`;
     if (windSpeed) windSpeed.textContent = `${data.current.wind_kph} km/h`;
     if (windDirection) windDirection.textContent = data.current.wind_dir;
+    if (pressure) pressure.textContent = `${data.current.pressure_mb} mb`;
+    if (uvIndex) uvIndex.textContent = data.current.uv;
+    if (precipitation) precipitation.textContent = `${data.current.precip_mm} mm`;
 
     // Update sunrise and sunset times
     const sunriseElement = document.getElementById('sunrise');
@@ -420,6 +460,8 @@ function updateWeatherUI(data) {
     
     // Initialize clock with location's timezone
     updateLocalClock(data.location.tz_id);
+
+    updateWeatherDisplay();
 }
 
 // Map Integration
@@ -646,6 +688,18 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsModal.style.display = 'none';
         }
     });
+
+    // Initialize advanced weather mode
+    isAdvancedWeather = localStorage.getItem('advancedWeather') === 'true';
+    const advancedWeatherToggle = document.getElementById('advancedWeatherToggle');
+    if (advancedWeatherToggle) {
+        advancedWeatherToggle.checked = isAdvancedWeather;
+        advancedWeatherToggle.addEventListener('change', (e) => {
+            isAdvancedWeather = e.target.checked;
+            localStorage.setItem('advancedWeather', isAdvancedWeather);
+            updateWeatherDisplay();
+        });
+    }
 });
 
 // Add this helper function for temperature updates
@@ -832,5 +886,27 @@ function toggleHistoryOverview(event) {
     } else {
         historyContent.classList.add('expanded');
         expandIcon.classList.add('rotated');
+    }
+}
+
+// Add this function to handle weather display updates
+function updateWeatherDisplay() {
+    const weatherDetails = document.querySelector('.weather-details');
+    if (!weatherDetails) return;
+
+    const detailItems = weatherDetails.querySelectorAll('.weather-detail-item');
+    
+    if (isAdvancedWeather) {
+        // Show all weather detail items
+        detailItems.forEach(item => {
+            item.style.display = 'flex';
+        });
+        weatherDetails.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    } else {
+        // Show only the first two items (humidity and wind speed)
+        detailItems.forEach((item, index) => {
+            item.style.display = index < 2 ? 'flex' : 'none';
+        });
+        weatherDetails.style.gridTemplateColumns = 'repeat(2, 1fr)';
     }
 }
