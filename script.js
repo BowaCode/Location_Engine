@@ -1,3 +1,4 @@
+
 // Configuration
 const CONFIG = {
     WEATHER_API_KEY: 'b1ed402df4814dc2b3f180428243110', // Replace with your WeatherAPI.com key
@@ -12,6 +13,14 @@ const CARDS_TEMPLATE = `
             <div class="time-display">
                 <div class="clock" id="clock"></div>
                 <div class="date" id="date"></div>
+                <div class="timezone-info">
+                    <i class="fas fa-globe"></i>
+                    <span id="timezone">Loading timezone...</span>
+                </div>
+                <div class="timezone-offset">
+                    <i class="fas fa-clock"></i>
+                    <span id="timezoneOffset">Loading offset...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -455,6 +464,20 @@ function updateWeatherUI(data) {
         sunsetElement.textContent = formatTime(astroData.sunset);
     }
 
+    // Update timezone information immediately
+    const timezoneElement = document.getElementById('timezone');
+    const timezoneOffsetElement = document.getElementById('timezoneOffset');
+    
+    if (timezoneElement && timezoneOffsetElement && data.location.tz_id) {
+        // Store timezone for clock updates
+        window.currentTimezone = data.location.tz_id;
+        
+        // Initialize clock with location's timezone immediately
+        requestAnimationFrame(() => {
+            updateLocalClock(data.location.tz_id);
+        });
+    }
+
     // Store the timezone for clock updates
     window.currentTimezone = data.location.tz_id;
     
@@ -561,9 +584,31 @@ function showError(message) {
 function updateLocalClock(timezone) {
     const clockElement = document.getElementById('clock');
     const dateElement = document.getElementById('date');
+    const timezoneElement = document.getElementById('timezone');
+    const timezoneOffsetElement = document.getElementById('timezoneOffset');
     
     if (!clockElement || !dateElement) return;
 
+    // Immediately update timezone info
+    if (timezoneElement && timezoneOffsetElement) {
+        const timezoneParts = timezone.split('/');
+        const cityName = timezoneParts[timezoneParts.length - 1].replace(/_/g, ' ');
+        timezoneElement.textContent = cityName;
+
+        // Get timezone offset immediately
+        const now = new Date();
+        const options = { timeZone: timezone, timeZoneName: 'short' };
+        const timeString = now.toLocaleString('en-US', options);
+        const tzMatch = timeString.match(/[A-Z]{3,4}$/);
+        const tzAbbr = tzMatch ? tzMatch[0] : '';
+        
+        // Calculate offset
+        const offset = -now.getTimezoneOffset() / 60;
+        const offsetStr = offset >= 0 ? `+${offset}` : `${offset}`;
+        timezoneOffsetElement.textContent = `UTC${offsetStr} (${tzAbbr})`;
+    }
+
+    // Update time immediately
     function updateTime() {
         const now = new Date();
         
@@ -576,7 +621,7 @@ function updateLocalClock(timezone) {
             timeZone: timezone
         };
 
-        // Format date: Day, Month Date, Year
+        // Format date
         const dateOptions = {
             weekday: 'long',
             year: 'numeric',
@@ -586,19 +631,20 @@ function updateLocalClock(timezone) {
         };
 
         try {
-            const timeString = now.toLocaleTimeString('en-US', timeOptions);
-            clockElement.textContent = timeString;
+            clockElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
             dateElement.textContent = now.toLocaleDateString('en-US', dateOptions);
         } catch (error) {
             console.error('Error updating clock:', error);
         }
     }
 
-    // Update immediately and then every second
-    updateTime();
+    // Clear any existing interval
     if (window.clockInterval) {
         clearInterval(window.clockInterval);
     }
+
+    // Update immediately and set interval
+    updateTime();
     window.clockInterval = setInterval(updateTime, 1000);
 }
 
