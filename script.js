@@ -1,4 +1,3 @@
-
 // Configuration
 const CONFIG = {
     WEATHER_API_KEY: 'b1ed402df4814dc2b3f180428243110', // Replace with your WeatherAPI.com key
@@ -137,6 +136,21 @@ const CARDS_TEMPLATE = `
         <div id="map" class="map-container"></div>
     </div>
 
+    <!-- Forecast Card -->
+    <div class="card forecast-card">
+        <h3 class="forecast-title">
+            <i class="fas fa-calendar-week"></i>
+            7-Day Forecast
+        </h3>
+        <div class="forecast-container">
+            <div class="forecast-scroll">
+                <div class="forecast-items" id="forecastItems">
+                    <!-- Forecast items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p>
@@ -265,6 +279,7 @@ const MAP_CONFIG = {
 let isFahrenheit = false;
 let is24Hour = false;
 let isAdvancedWeather = false;
+let isMph = false;
 
 // Add these constants for theme management
 const HOLIDAY_THEMES = {
@@ -359,7 +374,7 @@ async function searchLocation() {
 
         // Use the first (most relevant) result
         const bestMatch = testData[0];
-        const url = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=${encodeURIComponent(bestMatch.url)}&days=1`;
+        const url = `https://api.weatherapi.com/v1/forecast.json?key=${CONFIG.WEATHER_API_KEY}&q=${encodeURIComponent(bestMatch.url)}&days=7&aqi=no`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -456,7 +471,15 @@ function updateWeatherUI(data) {
 
     // Update all weather details
     if (humidity) humidity.textContent = `${data.current.humidity}%`;
-    if (windSpeed) windSpeed.textContent = `${data.current.wind_kph} km/h`;
+    if (windSpeed) {
+        const speedKmh = data.current.wind_kph;
+        if (isMph) {
+            const speedMph = Math.round(speedKmh * 0.621371);
+            windSpeed.textContent = `${speedMph} mph`;
+        } else {
+            windSpeed.textContent = `${Math.round(speedKmh)} km/h`;
+        }
+    }
     if (windDirection) windDirection.textContent = data.current.wind_dir;
     if (pressure) pressure.textContent = `${data.current.pressure_mb} mb`;
     if (uvIndex) uvIndex.textContent = data.current.uv;
@@ -500,6 +523,40 @@ function updateWeatherUI(data) {
     updateLocalClock(data.location.tz_id);
 
     updateWeatherDisplay();
+
+    // Update forecast information
+    const forecastItems = document.getElementById('forecastItems');
+    if (forecastItems && data.forecast?.forecastday) {
+        forecastItems.innerHTML = data.forecast.forecastday.map((day, index) => {
+            const date = new Date(day.date);
+            const dayName = index === 0 ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short' });
+            const temp = isFahrenheit 
+                ? Math.round((day.day.avgtemp_c * 9/5) + 32)
+                : Math.round(day.day.avgtemp_c);
+            
+            return `
+                <div class="forecast-item">
+                    <span class="forecast-day">${dayName}</span>
+                    <img class="forecast-icon" src="${day.day.condition.icon}" alt="${day.day.condition.text}">
+                    <div class="forecast-temp">
+                        <span class="temp-value">${temp}</span>
+                        <span class="temp-unit">${isFahrenheit ? '°F' : '°C'}</span>
+                    </div>
+                    <span class="forecast-condition">${day.day.condition.text}</span>
+                    <div class="forecast-details">
+                        <div class="forecast-detail">
+                            <i class="fas fa-droplet"></i>
+                            <span>${day.day.daily_chance_of_rain}%</span>
+                        </div>
+                        <div class="forecast-detail">
+                            <i class="fas fa-wind"></i>
+                            <span>${Math.round(day.day.maxwind_kph)} km/h</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 }
 
 // Map Integration
@@ -686,6 +743,18 @@ document.addEventListener('DOMContentLoaded', () => {
     isFahrenheit = localStorage.getItem('tempUnit') === 'F';
     is24Hour = localStorage.getItem('clockFormat') === '24h';
     
+    // Initialize speed unit preference
+    isMph = localStorage.getItem('speedUnit') === 'mph';
+    const speedUnitToggle = document.getElementById('speedUnitToggle');
+    if (speedUnitToggle) {
+        speedUnitToggle.checked = isMph;
+        speedUnitToggle.addEventListener('change', (e) => {
+            isMph = e.target.checked;
+            localStorage.setItem('speedUnit', isMph ? 'mph' : 'kmh');
+            updateSpeedDisplay();
+        });
+    }
+
     // Initialize UI elements
     const searchInput = document.getElementById('locationInput');
     const unitToggle = document.getElementById('unitToggle');
@@ -985,4 +1054,37 @@ function updateWeatherDisplay() {
         });
         weatherDetails.style.gridTemplateColumns = 'repeat(2, 1fr)';
     }
+}
+
+// Add this helper function for speed updates
+function updateSpeedDisplay() {
+    const windSpeedElement = document.getElementById('windSpeed');
+    if (windSpeedElement) {
+        const speedKmh = parseFloat(windSpeedElement.textContent);
+        if (!isNaN(speedKmh)) {
+            if (isMph) {
+                const speedMph = Math.round(speedKmh * 0.621371);
+                windSpeedElement.textContent = `${speedMph} mph`;
+            } else {
+                windSpeedElement.textContent = `${Math.round(speedKmh)} km/h`;
+            }
+        }
+    }
+
+    // Also update forecast wind speeds if they exist
+    const forecastItems = document.querySelectorAll('.forecast-item');
+    forecastItems.forEach(item => {
+        const windElement = item.querySelector('.forecast-detail:nth-child(2) span');
+        if (windElement) {
+            const speedKmh = parseFloat(windElement.textContent);
+            if (!isNaN(speedKmh)) {
+                if (isMph) {
+                    const speedMph = Math.round(speedKmh * 0.621371);
+                    windElement.textContent = `${speedMph} mph`;
+                } else {
+                    windElement.textContent = `${Math.round(speedKmh)} km/h`;
+                }
+            }
+        }
+    });
 }
