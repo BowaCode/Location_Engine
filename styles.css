@@ -1243,38 +1243,51 @@ input:checked + .slider .h24 {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
     backdrop-filter: blur(5px);
+    /* Center content using flexbox */
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
 
 .settings-content {
-    position: absolute;
-    top: calc(50vh - 200px); /* Center vertically */
-    left: calc(50% - 200px); /* Center horizontally */
+    position: relative; /* Changed from absolute */
     background: var(--surface);
     padding: 32px;
     border-radius: 20px;
-    width: 400px; /* Fixed width */
+    width: 90%;
+    max-width: 400px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     opacity: 0;
+    transform: scale(0.95);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 20px; /* Added margin for mobile spacing */
 }
 
 /* Visible state */
 .settings-modal.visible {
-    display: block;
+    display: flex;
 }
 
 .settings-modal.visible .settings-content {
     opacity: 1;
+    transform: scale(1);
 }
 
-/* Responsive adjustments */
+/* Mobile Responsive adjustments */
 @media (max-width: 480px) {
     .settings-content {
         width: 85%;
         padding: 24px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        margin: 16px;
+        /* Remove any fixed positioning or transforms */
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: scale(0.95);
+    }
+
+    .settings-modal.visible .settings-content {
+        transform: scale(1);
     }
 }
 
@@ -2626,4 +2639,89 @@ input:checked + .slider .h24 {
 
 [data-theme="night"] .card:hover {
     box-shadow: 0 8px 25px rgba(92, 107, 192, 0.3);
+}
+
+/* Welcome Card Styles */
+.welcome-card {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    margin: 24px 0;
+    animation: fadeIn 0.3s ease;
+}
+
+.welcome-content {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.welcome-card i {
+    font-size: 64px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    animation: float 3s infinite ease-in-out;
+}
+
+.welcome-card h2 {
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.welcome-card p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Hide welcome card when results are shown */
+.cards-container.has-results ~ .welcome-card {
+    display: none;
+}
+
+/* Desktop Adjustments */
+@media (min-width: 1024px) {
+    .welcome-card {
+        padding: 64px 48px;
+        margin: 48px 0;
+    }
+
+    .welcome-card i {
+        font-size: 84px;
+        margin-bottom: 32px;
+    }
+
+    .welcome-card h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .welcome-card p {
+        font-size: 20px;
+    }
+}
+
+/* Theme-specific welcome card styles */
+[data-theme="dark"] .welcome-card {
+    background: var(--surface);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="ocean"] .welcome-card i {
+    background: linear-gradient(135deg, #006064, #00acc1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="forest"] .welcome-card i {
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="night"] .welcome-card i {
+    animation: twinkle 2s infinite;
 }
