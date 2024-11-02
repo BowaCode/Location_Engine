@@ -2725,3 +2725,138 @@ input:checked + .slider .h24 {
 [data-theme="night"] .welcome-card i {
     animation: twinkle 2s infinite;
 }
+
+/* Forecast Card Styles */
+.forecast-card {
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    color: white;
+    padding: 24px;
+    overflow: hidden;
+}
+
+.forecast-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 24px 0;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.forecast-title i {
+    font-size: 24px;
+}
+
+.forecast-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.forecast-scroll {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 12px;
+}
+
+.forecast-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.forecast-items {
+    display: flex;
+    gap: 16px;
+    padding: 4px;
+}
+
+.forecast-item {
+    flex: 0 0 auto;
+    min-width: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.forecast-item:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.forecast-day {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.forecast-icon {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.forecast-temp {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.temp-value {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.temp-unit {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.forecast-condition {
+    font-size: 12px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    min-height: 32px;
+}
+
+.forecast-details {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}
+
+.forecast-detail {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.forecast-detail i {
+    font-size: 12px;
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1024px) {
+    .forecast-card {
+        grid-column: span 2;
+    }
+
+    .forecast-items {
+        justify-content: center;
+    }
+
+    .forecast-item {
+        min-width: 140px;
+    }
+}
