@@ -168,19 +168,13 @@ const VALIDATORS = {
         return /^[a-zA-Z0-9\s,.-]+$/.test(input);
     },
     state: (input) => {
+        // Check if input is a state code or full state name
+        const upperInput = input.toUpperCase();
+        if (upperInput.length === 2) {
+            return STATE_CODES.hasOwnProperty(upperInput);
+        }
         // List of valid US states
-        const validStates = [
-            'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado',
-            'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho',
-            'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana',
-            'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota',
-            'mississippi', 'missouri', 'montana', 'nebraska', 'nevada',
-            'new hampshire', 'new jersey', 'new mexico', 'new york',
-            'north carolina', 'north dakota', 'ohio', 'oklahoma', 'oregon',
-            'pennsylvania', 'rhode island', 'south carolina', 'south dakota',
-            'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington',
-            'west virginia', 'wisconsin', 'wyoming'
-        ];
+        const validStates = Object.values(STATE_CODES).map(state => state.toLowerCase());
         return validStates.includes(input.toLowerCase());
     },
     country: (input) => {
@@ -199,6 +193,11 @@ const FORMATTERS = {
             .join(' ');
     },
     state: (input) => {
+        // Check if input is a state code
+        const upperInput = input.toUpperCase();
+        if (upperInput.length === 2 && STATE_CODES[upperInput]) {
+            return STATE_CODES[upperInput];
+        }
         // Format state name
         const formatted = input.trim().toLowerCase();
         return formatted.charAt(0).toUpperCase() + formatted.slice(1);
@@ -329,7 +328,7 @@ async function searchLocation() {
     if (!VALIDATORS[searchType](locationInput)) {
         switch(searchType) {
             case 'state':
-                showError('Please enter a valid US state name');
+                showError('Please enter a valid US state name or state code (e.g., "California" or "CA")');
                 break;
             case 'country':
                 showError('Please enter a valid country name');
@@ -1088,3 +1087,57 @@ function updateSpeedDisplay() {
         }
     });
 }
+
+// Add this constant for state codes
+const STATE_CODES = {
+    'AL': 'Alabama',
+    'AK': 'Alaska',
+    'AZ': 'Arizona',
+    'AR': 'Arkansas',
+    'CA': 'California',
+    'CO': 'Colorado',
+    'CT': 'Connecticut',
+    'DE': 'Delaware',
+    'FL': 'Florida',
+    'GA': 'Georgia',
+    'HI': 'Hawaii',
+    'ID': 'Idaho',
+    'IL': 'Illinois',
+    'IN': 'Indiana',
+    'IA': 'Iowa',
+    'KS': 'Kansas',
+    'KY': 'Kentucky',
+    'LA': 'Louisiana',
+    'ME': 'Maine',
+    'MD': 'Maryland',
+    'MA': 'Massachusetts',
+    'MI': 'Michigan',
+    'MN': 'Minnesota',
+    'MS': 'Mississippi',
+    'MO': 'Missouri',
+    'MT': 'Montana',
+    'NE': 'Nebraska',
+    'NV': 'Nevada',
+    'NH': 'New Hampshire',
+    'NJ': 'New Jersey',
+    'NM': 'New Mexico',
+    'NY': 'New York',
+    'NC': 'North Carolina',
+    'ND': 'North Dakota',
+    'OH': 'Ohio',
+    'OK': 'Oklahoma',
+    'OR': 'Oregon',
+    'PA': 'Pennsylvania',
+    'RI': 'Rhode Island',
+    'SC': 'South Carolina',
+    'SD': 'South Dakota',
+    'TN': 'Tennessee',
+    'TX': 'Texas',
+    'UT': 'Utah',
+    'VT': 'Vermont',
+    'VA': 'Virginia',
+    'WA': 'Washington',
+    'WV': 'West Virginia',
+    'WI': 'Wisconsin',
+    'WY': 'Wyoming'
+};
