@@ -123,10 +123,9 @@ body {
 
 /* Cards Container */
 .cards-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    padding-bottom: 20px; /* Space for bottom mobile navigation if needed */
 }
 
 /* Weather Card */
@@ -2590,6 +2589,7 @@ input:checked + .slider .h24 {
     overflow: hidden;
 }
 
+/* Night theme star background */
 [data-theme="night"] .weather-card::before,
 [data-theme="night"] .time-card::before {
     content: '';
@@ -2599,11 +2599,11 @@ input:checked + .slider .h24 {
     right: 0;
     bottom: 0;
     background-image: 
-        radial-gradient(1px 1px at 20px 30px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 40px 70px, white, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 50px 160px, white, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 80px 120px, white, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 110px 50px, white, rgba(0,0,0,0));
+        radial-gradient(1px 1px at 20px 30px, white, transparent),
+        radial-gradient(1px 1px at 40px 70px, white, transparent),
+        radial-gradient(1px 1px at 50px 160px, white, transparent),
+        radial-gradient(2px 2px at 80px 120px, white, transparent),
+        radial-gradient(2px 2px at 110px 50px, white, transparent);
     background-repeat: repeat;
     animation: twinkle 4s infinite;
     opacity: 0.3;
@@ -3354,4 +3354,162 @@ button:hover, select:hover {
     border-radius: 4px;
     opacity: 0;
     animation: pulse 2s infinite;
+}
+
+/* Card Layout - Default (Desktop) */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* Keep your existing desktop card order */
+.time-card {
+    grid-column: 1 / 2;
+    grid-row: 1;
+}
+
+.weather-card {
+    grid-column: 2 / 3;
+    grid-row: 1;
+}
+
+.history-card {
+    grid-column: 1 / 3;
+    grid-row: 2;
+}
+
+.sun-card {
+    grid-column: 1 / 2;
+    grid-row: 3;
+}
+
+.map-card {
+    grid-column: 2 / 3;
+    grid-row: 3;
+}
+
+.forecast-card {
+    grid-column: 1 / 3;
+    grid-row: 4;
+}
+
+/* Mobile Layout - Stack all cards */
+@media (max-width: 768px) {
+    .cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Reset all grid properties */
+    .time-card,
+    .weather-card,
+    .history-card,
+    .sun-card,
+    .map-card,
+    .forecast-card {
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
+    }
+
+    /* Adjust map height for mobile */
+    .map-card {
+        height: 250px;
+    }
+
+    /* Adjust padding for mobile */
+    .content-wrapper {
+        padding: 16px;
+    }
+}
+
+/* Desktop Layout */
+.cards-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+}
+
+/* Desktop card positions */
+.cards-container .time-card {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 !important;
+}
+
+.cards-container .weather-card {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 !important;
+}
+
+.cards-container .history-card {
+    grid-column: 1 / 3 !important;
+    grid-row: 2 !important;
+}
+
+.cards-container .sun-card {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 !important;
+}
+
+.cards-container .map-card {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 !important;
+}
+
+.cards-container .forecast-card {
+    grid-column: 1 / 3 !important;
+    grid-row: 4 !important;
+}
+
+/* Mobile Layout */
+@media screen and (max-width: 768px) {
+    .cards-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* Reset all grid properties for mobile */
+    .cards-container .time-card,
+    .cards-container .weather-card,
+    .cards-container .history-card,
+    .cards-container .sun-card,
+    .cards-container .map-card,
+    .cards-container .forecast-card {
+        grid-column: unset !important;
+        grid-row: unset !important;
+        width: 100% !important;
+        margin-bottom: 16px !important;
+    }
+
+    .cards-container .map-card {
+        height: 250px !important;
+    }
+
+    .content-wrapper {
+        padding: 16px !important;
+    }
+}
+
+/* Hide cards by default */
+.cards-container {
+    display: none !important;
+}
+
+/* Show cards only when has-results class is present */
+.cards-container.has-results {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+}
+
+/* Mobile Layout */
+@media screen and (max-width: 768px) {
+    .cards-container.has-results {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
 }
