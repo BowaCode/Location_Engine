@@ -1,3 +1,4 @@
+
 // Configuration
 const CONFIG = {
     WEATHER_API_KEY: 'b1ed402df4814dc2b3f180428243110', // Replace with your WeatherAPI.com key
@@ -366,13 +367,28 @@ async function searchLocation() {
             throw new Error(data.error.message);
         }
 
+        // Hide welcome card and show results
+        const welcomeCard = document.getElementById('welcomeCard');
+        if (welcomeCard) {
+            welcomeCard.style.display = 'none';
+        }
+        
         restoreCardsTemplate();
         updateWeatherUI(data);
         initMap(data.location.lat, data.location.lon, data.location.name);
+        
+        cardsContainer.classList.add('has-results');
         cardsContainer.style.display = 'grid';
         
     } catch (error) {
         showError(error.message || 'Unable to fetch weather data');
+        // Show welcome card again on error
+        const welcomeCard = document.getElementById('welcomeCard');
+        if (welcomeCard) {
+            welcomeCard.style.display = 'block';
+        }
+        const cardsContainer = document.querySelector('.cards-container');
+        cardsContainer.classList.remove('has-results');
     } finally {
         hideLoading();
     }
